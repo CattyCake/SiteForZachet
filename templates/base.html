@@ -1,0 +1,68 @@
+{% include 'navbar.html' %}
+
+
+ <!-- Header-->
+        <header class="bg-dark py-5">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                    <h1 class="display-4 fw-bolder">Никогда не поздно, никогда не рано</h1>
+                    <p class="lead fw-normal text-white-50 mb-0">поменять все поздно если это рано</p>
+                </div>
+            </div>
+        </header>
+        <!-- Section-->
+
+        <section class="py-5">
+            <div class="container px-4 px-lg-5 mt-5">
+                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                    {% for product_image in products_image %}
+
+                        <div class="col mb-5">
+                        <div class="card h-100">
+                             <!-- Sale badge-->
+                            {% if product_image.product.discount %}
+                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Скидка -{{ product_image.product.discount }}%</div>
+                            {% endif%}
+                            <!-- Product image-->
+                            <a href="{% url 'product' product_image.product.id %}">
+                            <img class="card-img-top" src="{{ product_image.image.url }}" alt="..." />
+                            </a>
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder">{{ product_image.product.name }}</h5>
+                                    <!-- Product price-->
+                                   <div class="price"> {% if product_image.product.discount %}
+                                    <span class="text-muted text-decoration-line-through">{{ product_image.product.price }}</span>
+                                  <script>
+                                        x =  {{ product_image.product.price }} / 100 * {{ product_image.product.discount }}
+                                        y = {{ product_image.product.price }} - x
+                                        document.write('<span class="discountprice">'+y.toFixed(2)+'</span>');
+                                    </script>
+                                        {% elif product_image.product.discount == 0 %}
+                                        <span class="discountprice">{{product_image.product.price}}</span>
+                                    {% endif%}
+                                </div>
+                                   </div>
+                            </div>
+                            <!-- Product actions-->
+                            <form id = buing_product action="{% url 'basket_adding' %}"  class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div  class="text-center">{% csrf_token %}<a class="btn btn-outline-dark mt-auto buy"
+                                                            id ="buing_product"
+                                                            data_id = "{{ product_image.product.id }}"
+                                                            data_name ="{{ product_image.product.name }}"
+
+
+                                                            >
+                                    Добавить в корзину</a></div>
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </section>
+
+{% include 'footer.html' %}
